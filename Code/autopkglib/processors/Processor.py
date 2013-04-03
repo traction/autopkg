@@ -133,23 +133,6 @@ class Processor(object):
         self.main()
         return self.env
     
-    def cmdexec(self, command, description):
-        """Execute a command and return output."""
-        
-        try:
-            p = subprocess.Popen(command,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE)
-            (out, err) = p.communicate()
-        except OSError as e:
-            raise ProcessorError(
-                "%s execution failed with error code %d: %s" 
-                % (command[0], e.errno, e.strerror))
-        if p.returncode != 0:
-            raise ProcessorError("%s failed: %s" % (description, err))
-        
-        return out
-    
     def execute_shell(self):
         """Execute as a standalone binary on the commandline."""
         

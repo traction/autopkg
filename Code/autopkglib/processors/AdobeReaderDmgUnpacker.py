@@ -65,6 +65,23 @@ class AdobeReaderDmgUnpacker(DmgMounter):
         except BaseException as e:
             raise ProcessorError(e)
     
+    def cmdexec(self, command, description):
+        """Execute a command and return output."""
+        
+        try:
+            p = subprocess.Popen(command,
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+            (out, err) = p.communicate()
+        except OSError as e:
+            raise ProcessorError(
+                "%s execution failed with error code %d: %s" 
+                % (command[0], e.errno, e.strerror))
+        if p.returncode != 0:
+            raise ProcessorError("%s failed: %s" % (description, err))
+        
+        return out
+    
     def unsevenzip(self, app_path, sevenzip_path):
         print "Unsevenzipping"
         for filename in os.listdir(app_path):
