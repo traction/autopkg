@@ -15,20 +15,25 @@
 # limitations under the License.
 
 
+import sys
+import subprocess
+from ..Handler import Handler, HandlerError
+
+
 __all__ = [
     "OutputHandler",
     "OutputHandlerError"
 ]
 
 
-class OutputHandlerError(Exception):
+class OutputHandlerError(HandlerError):
     pass
 
-class OutputHandler(object):
+class OutputHandler(Handler):
     """OutputHandler base class.
     
-    OutputHandlers add items to a repository, and accept a property list as
-    input, with the following keys defined:
+    OutputHandlers imports items into a repository, and accepts a property
+    list as input, with the following keys defined:
     
         NAME        The name of the item to import.
         version     The version of the item to import.
@@ -36,16 +41,7 @@ class OutputHandler(object):
     """
     
     def __init__(self, env=None, infile=None, outfile=None):
-        super(OutputHandler, self).__init__()
-        self.env = env
-        if infile is None:
-            self.infile = sys.stdin
-        else:
-            self.infile = infile
-        if outfile is None:
-            self.outfile = sys.stdout
-        else:
-            self.outfile = outfile
+        super(OutputHandler, self).__init__(env, infile, outfile)
     
     def main(self):
         raise OutputHandlerError("Abstract method main() not implemented.")

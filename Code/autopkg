@@ -24,7 +24,7 @@ import time
 import imp
 
 from autopkglib import BUNDLE_ID
-from autopkglib.processors.Processor import ProcessorError
+from autopkglib.Handler import HandlerError
 import autopkglib
 
 
@@ -94,7 +94,7 @@ class AutoPackager(object):
                 processor_class = getattr(autopkglib.processors, step.Processor)
             except AttributeError as e:
                 raise AutoPackagerError(
-                        "Unknown processor '%s'" % step.Processor)
+                        "Unknown processor '%s': %s" % (step.Processor, e))
             # Add arguments to set of variables.
             variables.update(set(step.Arguments.keys()))
             # Make sure all required input variables exist.
@@ -132,7 +132,7 @@ class AutoPackager(object):
             
             try:
                 self.env = processor.process()
-            except ProcessorError as e:
+            except HandlerError as e:
                 print >> sys.stderr, str(e)
                 raise AutoPackagerError("Recipe processing failed.")
             
