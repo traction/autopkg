@@ -401,6 +401,12 @@ def print_new_packages(new_packages):
             identifier, version, item["pkg_path"]))
 
 
+def print_run_summary(summary):
+    '''Print an auto-formatted, human-readable summary
+    in a table format. Not implemented.'''
+    pass
+
+
 def write_plist_exit_on_fail(plist_dict, path):
     '''Writes a dict to a new plist at path, exits the program
     if the write fails.'''
@@ -1255,6 +1261,19 @@ def run_recipes(argv):
 
     if not new_downloads and not new_packages and not new_imports:
         log("\nNothing downloaded, packaged or imported.")
+
+
+    summary = {}
+    for item in autopackager.results:
+        if item.get("Report"):
+            if item["Processor"] not in summary.keys():
+                summary[item["Processor"]] = {}
+                summary[item["Processor"]]["title"] = item["Report"]["title"]
+                summary[item["Processor"]]["items"] = []
+            summary[item["Processor"]]["items"].append(item["Report"]["items"])
+
+    # Just a pprint for now
+    pprint.pprint(summary)
 
     # save report plist with the summary data
     if options.report_plist:

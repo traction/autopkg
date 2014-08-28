@@ -91,6 +91,10 @@ class URLDownloader(Processor):
                  "last time it was downloaded."),
         },
     }
+    report = {
+        "title": "The following new items were downloaded:",
+        "trigger_variable": "download_changed",
+    }
 
     def main(self):
         self.env["last_modified"] = ""
@@ -202,6 +206,10 @@ class URLDownloader(Processor):
                             % url_handle.info().get("etag"))
 
             self.output("Downloaded %s" % pathname)
+
+            self.report["items"] = {
+                "Path": self.env["pathname"]
+                }
 
         except BaseException as err:
             raise ProcessorError(
