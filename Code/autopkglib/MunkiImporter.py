@@ -378,11 +378,16 @@ class MunkiImporter(Processor):
                                      % (destination_path, err.strerror))
 
         extension = "plist"
-        if self.env.get("MUNKI_PKGINFO_FILE_EXTENSION"):
-            extension = self.env["MUNKI_PKGINFO_FILE_EXTENSION"].strip(".")
-        pkginfo_name = "%s-%s.%s" % (pkginfo["name"],
-                                     pkginfo["version"].strip(),
-                                     extension)
+        if self.env.get("MUNKI_PKGINFO_FILE_EXTENSION") != "":
+            if self.env.get("MUNKI_PKGINFO_FILE_EXTENSION"):
+                extension = self.env["MUNKI_PKGINFO_FILE_EXTENSION"].strip(".")
+            pkginfo_name = "%s-%s.%s" % (pkginfo["name"],
+                                         pkginfo["version"].strip(),
+                                         extension)
+        else:
+            pkginfo_name = "%s-%s" % (pkginfo["name"],
+                                     pkginfo["version"].strip())
+
         pkginfo_path = os.path.join(destination_path, pkginfo_name)
         index = 0
         while os.path.exists(pkginfo_path):
